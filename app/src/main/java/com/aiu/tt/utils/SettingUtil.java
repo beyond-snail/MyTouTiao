@@ -1,4 +1,4 @@
-package com.aiu.tt;
+package com.aiu.tt.utils;
 
 ////////////////////////////////////////////////////////////////////
 //                          _ooOoo_                               //
@@ -33,8 +33,10 @@ package com.aiu.tt;
 //                  不见满街漂亮妹，哪个归得程序员？                   //
 ////////////////////////////////////////////////////////////////////
 
-import android.content.Context;
-import android.support.multidex.MultiDexApplication;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.aiu.tt.InitApp;
 
 /**********************************************************
  *                                                        *
@@ -42,19 +44,24 @@ import android.support.multidex.MultiDexApplication;
  **********************************************************/
 
 
-public class InitApp extends MultiDexApplication {
+public class SettingUtil {
+    private SharedPreferences setting = PreferenceManager.getDefaultSharedPreferences(InitApp.AppContext);
 
-    public static Context AppContext;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        AppContext = getApplicationContext();
-        initTheme();
-        
+    private final static class SettingsUtilInstance{
+        private static final SettingUtil instance = new SettingUtil();
     }
 
-    private void initTheme() {
-
+    public static SettingUtil getInstance(){
+        return SettingsUtilInstance.instance;
     }
+
+
+    /**
+     * 获取是否开启无图模式
+     * @return
+     */
+    public boolean getIsNoPhotoMode(){
+        return setting.getBoolean("switch_noPhotoMode", false) && NetWorkUtil.isMobileConnected(InitApp.AppContext);
+    }
+
 }
